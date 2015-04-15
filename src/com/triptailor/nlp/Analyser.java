@@ -28,6 +28,7 @@ public class Analyser {
 	final int BASE_YEAR = 2016;
 	
 	static StanfordCoreNLP pipeline;
+	// Loads NLP modules
 	static {
 		Properties props = new Properties();
 	    props.setProperty("annotators", "tokenize, ssplit, pos, lemma, parse, sentiment");
@@ -43,6 +44,7 @@ public class Analyser {
 	public void nlpAnalyse(String path, String hostelName) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(path));
 		
+		// Goes over the review file
 		boolean isReview = false;
 		int year = 2014;
 		while(true) {
@@ -55,10 +57,12 @@ public class Analyser {
 			
 			if(c != 65535) {
 				if(isReview) {
+					// NLP
 					nlp(line, year, hostelName);
 					System.out.print(".");
 				}
 				else
+					// Gets the year of the review
 					year = getYear(line);
 			}
 			else
@@ -87,11 +91,13 @@ public class Analyser {
 					words.add(word);
 			}
 
+			// Sentiment analysis
 			Tree tree = sentence.get(SentimentCoreAnnotations.AnnotatedTree.class);
 			int sentiment = RNNCoreAnnotations.getPredictedClass(tree) - 1;
 			
 			double timeModifier = 1 / Math.log(BASE_YEAR - year);
 			
+			// Saves modifiers
 			for(String word : words) {
 				double[] holder = vector.get(word);
 				if(holder == null)

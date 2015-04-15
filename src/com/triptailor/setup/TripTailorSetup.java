@@ -75,6 +75,7 @@ public class TripTailorSetup {
 			}
 			
 			int hostelCounter = 1;
+			// Go over all files of the data
 			for(File file : new File(DATA_PATH + country + "/" + city).listFiles()) {
 				if(hostelCounter > lastHostel) {
 					String filePath = file.getAbsolutePath();
@@ -82,6 +83,7 @@ public class TripTailorSetup {
 					if(filePath.contains("_reviews.txt")) {
 						BufferedReader infoReader = new BufferedReader(new FileReader(filePath.replace("_reviews.txt", "_general.txt")));
 						
+						// Hostel general info
 						String hostelName = infoReader.readLine().replace(";", "").replace("_", " ");
 						String info = infoReader.readLine();
 						double price = info.length() > 3 ? Double.parseDouble(info.substring(3)) / 14 : 0;
@@ -101,6 +103,7 @@ public class TripTailorSetup {
 						
 						infoReader.close();
 						
+						// NLP analysis
 						Analyser analyser = new Analyser();
 						System.out.print("Analysing NLP for " + hostelName + " ");
 						analyser.nlpAnalyse(filePath, hostelName);
